@@ -43,7 +43,7 @@ make install
 For normal local development:
 
 ```bash
-cp .env.example .env
+make local-env
 ```
 
 For code-server:
@@ -53,6 +53,14 @@ make codeserver-env
 ```
 
 `make codeserver-env` reads `$VSCODE_PROXY_URI` and writes the correct public API and web URLs.
+
+You can also use:
+
+```bash
+make env
+```
+
+`make env` uses code-server settings when `$VSCODE_PROXY_URI` exists and local settings otherwise.
 
 ## 5. Start
 

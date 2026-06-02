@@ -6,7 +6,7 @@ API_PORT ?= 18080
 WEB_PORT ?= 13080
 REDIS_PORT ?= 16379
 
-.PHONY: install install-api install-web dev start-api start-web redis-start redis-ping codeserver-env check
+.PHONY: install install-api install-web dev start-api start-web redis-start redis-ping env local-env codeserver-env check
 
 install: install-api install-web
 
@@ -38,9 +38,22 @@ start-api:
 start-web:
 	set -a && source .env && set +a && pnpm --filter lite-dify-web dev --hostname 0.0.0.0 --port $${WEB_PORT:-3000}
 
+env:
+	@if [ -n "$$VSCODE_PROXY_URI" ]; then \
+		$(MAKE) codeserver-env; \
+	else \
+		$(MAKE) local-env; \
+	fi
+
+local-env:
+	@cp .env.example .env
+	@echo "Wrote .env for local development"
+	@echo "Web: http://localhost:$(WEB_PORT)"
+	@echo "API: http://localhost:$(API_PORT)"
+
 codeserver-env:
 	@if [ -z "$$VSCODE_PROXY_URI" ]; then \
-		echo "VSCODE_PROXY_URI is not set"; \
+		echo "VSCODE_PROXY_URI is not set. Use 'make local-env' for normal local development, or 'make env' to auto-detect."; \
 		exit 1; \
 	fi
 	@proxy_api="$${VSCODE_PROXY_URI/\{\{port\}\}/18080}"; \

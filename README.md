@@ -35,7 +35,7 @@ Not implemented yet:
 ## Quick Start
 
 ```bash
-cp .env.example .env
+make local-env
 make install
 make redis-start
 make dev
