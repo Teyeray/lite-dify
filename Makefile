@@ -6,7 +6,7 @@ API_PORT ?= 18080
 WEB_PORT ?= 13080
 REDIS_PORT ?= 16379
 
-.PHONY: install install-api install-web dev start-api start-web redis-start redis-ping env local-env codeserver-env check
+.PHONY: install install-api install-web dev start-api start-web redis-start redis-ping env local-env codeserver-env check ui-smoke
 
 install: install-api install-web
 
@@ -74,4 +74,8 @@ codeserver-env:
 
 check:
 	cd api && uv run python -c "from app.main import app; print(app.title)"
+	cd api && uv run pytest tests
 	pnpm --filter lite-dify-web type-check
+
+ui-smoke:
+	pnpm --filter lite-dify-web ui-smoke

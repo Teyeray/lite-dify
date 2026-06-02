@@ -18,6 +18,7 @@ export default function ChatPage() {
   const [query, setQuery] = useState('')
   const [messages, setMessages] = useState<LocalMessage[]>([])
   const [isSending, setIsSending] = useState(false)
+  const [error, setError] = useState('')
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search)
@@ -35,11 +36,19 @@ export default function ChatPage() {
     const nextQuery = query.trim()
     setQuery('')
     setIsSending(true)
+    setError('')
     setMessages(current => [...current, { role: 'user', content: nextQuery }])
-    const result = await sendChat(appId, nextQuery, conversationId)
-    setConversationId(result.conversation.id)
-    setMessages(current => [...current, { role: 'assistant', content: result.answer.content }])
-    setIsSending(false)
+    try {
+      const result = await sendChat(appId, nextQuery, conversationId)
+      setConversationId(result.conversation.id)
+      setMessages(current => [...current, { role: 'assistant', content: result.answer.content }])
+    }
+    catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to send message')
+    }
+    finally {
+      setIsSending(false)
+    }
   }
 
   return (
@@ -70,8 +79,8 @@ export default function ChatPage() {
             Send
           </button>
         </form>
+        {error && <p className="muted" role="alert">{error}</p>}
       </div>
     </Shell>
   )
 }
-

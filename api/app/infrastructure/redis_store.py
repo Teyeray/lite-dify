@@ -14,18 +14,18 @@ class RedisAppRepository(AppRepository):
 
     def list(self) -> list[AppDefinition]:
         apps: list[AppDefinition] = []
-        for key in self._client.scan_iter("apps:*"):
+        for key in self._client.scan_iter("app_records:*"):
             raw = self._client.get(key)
             if raw:
                 apps.append(AppDefinition.model_validate_json(raw))
         return sorted(apps, key=lambda app: app.created_at)
 
     def get(self, app_id: UUID) -> AppDefinition | None:
-        raw = self._client.get(f"apps:{app_id}")
+        raw = self._client.get(f"app_records:{app_id}")
         return AppDefinition.model_validate_json(raw) if raw else None
 
     def save(self, app: AppDefinition) -> AppDefinition:
-        self._client.set(f"apps:{app.id}", app.model_dump_json())
+        self._client.set(f"app_records:{app.id}", app.model_dump_json())
         return app
 
 
@@ -39,7 +39,7 @@ class RedisConversationRepository(ConversationRepository):
 
     def save(self, conversation: Conversation) -> Conversation:
         self._client.set(f"conversations:{conversation.id}", conversation.model_dump_json())
-        self._client.sadd(f"apps:{conversation.app_id}:conversation_ids", str(conversation.id))
+        self._client.sadd(f"app_conversation_ids:{conversation.app_id}", str(conversation.id))
         return conversation
 
 

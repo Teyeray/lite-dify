@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from urllib.parse import urlparse, urlunparse
+
 from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
@@ -28,6 +30,11 @@ class Settings(BaseSettings):
             "http://127.0.0.1:3000",
             self.public_web_url,
         }
+        parsed_web_url = urlparse(self.public_web_url)
+        if parsed_web_url.hostname == "localhost":
+            origins.add(urlunparse(parsed_web_url._replace(netloc=parsed_web_url.netloc.replace("localhost", "127.0.0.1"))))
+        elif parsed_web_url.hostname == "127.0.0.1":
+            origins.add(urlunparse(parsed_web_url._replace(netloc=parsed_web_url.netloc.replace("127.0.0.1", "localhost"))))
         if self.next_allowed_dev_origins:
             origins.add(self.next_allowed_dev_origins)
         origins.update(self.cors_extra_origins)

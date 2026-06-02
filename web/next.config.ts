@@ -14,9 +14,17 @@ function getProxyAssetPrefix() {
   }
 }
 
-const allowedDevOrigins = process.env.NEXT_ALLOWED_DEV_ORIGINS
+const configuredAllowedDevOrigins = process.env.NEXT_ALLOWED_DEV_ORIGINS
   ? process.env.NEXT_ALLOWED_DEV_ORIGINS.split(',').map(origin => origin.trim()).filter(Boolean)
   : []
+
+const allowedDevOrigins = Array.from(new Set([
+  'http://localhost:13080',
+  'http://127.0.0.1:13080',
+  'localhost:13080',
+  '127.0.0.1:13080',
+  ...configuredAllowedDevOrigins,
+]))
 
 const nextConfig: NextConfig = {
   assetPrefix: getProxyAssetPrefix(),
@@ -24,4 +32,3 @@ const nextConfig: NextConfig = {
 }
 
 export default nextConfig
-

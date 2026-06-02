@@ -25,18 +25,26 @@ export default function NewAppPage() {
   const [description, setDescription] = useState('')
   const [systemPrompt, setSystemPrompt] = useState('')
   const [isSaving, setIsSaving] = useState(false)
+  const [error, setError] = useState('')
 
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
     setIsSaving(true)
-    const app = await createApp({
-      name,
-      mode,
-      description,
-      system_prompt: systemPrompt,
-      workflow: mode === 'chatflow' || mode === 'workflow' ? defaultWorkflow : undefined,
-    })
-    router.push(`/chat?app=${app.id}`)
+    setError('')
+    try {
+      const app = await createApp({
+        name,
+        mode,
+        description,
+        system_prompt: systemPrompt,
+        workflow: mode === 'chatflow' || mode === 'workflow' ? defaultWorkflow : undefined,
+      })
+      router.push(`/chat?app=${app.id}`)
+    }
+    catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to create app')
+      setIsSaving(false)
+    }
   }
 
   return (
@@ -69,8 +77,8 @@ export default function NewAppPage() {
         <button className="button" disabled={isSaving} type="submit">
           {isSaving ? 'Creating' : 'Create'}
         </button>
+        {error && <p className="muted" role="alert">{error}</p>}
       </form>
     </Shell>
   )
 }
-
