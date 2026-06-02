@@ -1,0 +1,8 @@
+packages:
+  - web
+
+onlyBuiltDependencies:
+  - sharp
+
+allowBuilds:
+  sharp: true
