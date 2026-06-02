@@ -73,10 +73,10 @@ The backend keeps repository interfaces separate from Redis implementations so a
 Minimal `.env`:
 
 ```env
-REDIS_URL=redis://127.0.0.1:6379/0
-NEXT_PUBLIC_API_BASE_URL=http://localhost:8000
-PUBLIC_API_URL=http://localhost:8000
-PUBLIC_WEB_URL=http://localhost:3000
+REDIS_URL=redis://127.0.0.1:16379/0
+NEXT_PUBLIC_API_BASE_URL=http://localhost:18080
+PUBLIC_API_URL=http://localhost:18080
+PUBLIC_WEB_URL=http://localhost:13080
 OPENAI_API_KEY=
 OPENAI_BASE_URL=https://api.openai.com/v1
 OPENAI_MODEL=gpt-4.1-mini

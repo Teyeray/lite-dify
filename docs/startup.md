@@ -23,7 +23,7 @@ Lite Dify uses Redis as its only persistence store in the first version.
 
 ```bash
 mkdir -p ~/data/lite-dify-redis
-redis-server --dir ~/data/lite-dify-redis --appendonly yes --port 6379
+redis-server --dir ~/data/lite-dify-redis --appendonly yes --port 16379
 ```
 
 Or from the project directory:
@@ -62,3 +62,9 @@ make dev
 ```
 
 Open the URL printed by `make codeserver-env` when running in code-server.
+
+Default ports are intentionally separated from the original Dify project:
+
+- Web: `13080`
+- API: `18080`
+- Redis: `16379`
